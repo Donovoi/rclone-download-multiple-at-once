@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -28,16 +29,8 @@ import (
 var (
 	// templateString is the template used in the authorization webserver
 	templateString string
-)
-
-const (
-	// TitleBarRedirectURL is the OAuth2 redirect URL to use when the authorization
-	// code should be returned in the title bar of the browser, with the page text
-	// prompting the user to copy the code and paste it in the application.
-	TitleBarRedirectURL = "urn:ietf:wg:oauth:2.0:oob"
-
 	// bindPort is the port that we bind the local webserver to
-	bindPort = "53682"
+	bindPort = GetFreePortNumber()
 
 	// bindAddress is binding for local webserver when active
 	bindAddress = "127.0.0.1:" + bindPort
@@ -50,6 +43,13 @@ const (
 
 	// RedirectLocalhostURL is redirect to local webserver when active with localhost
 	RedirectLocalhostURL = "http://localhost:" + bindPort + "/"
+)
+
+const (
+	// TitleBarRedirectURL is the OAuth2 redirect URL to use when the authorization
+	// code should be returned in the title bar of the browser, with the page text
+	// prompting the user to copy the code and paste it in the application.
+	TitleBarRedirectURL = "urn:ietf:wg:oauth:2.0:oob"
 
 	// RedirectPublicSecureURL is a public https URL which
 	// redirects to the local webserver
@@ -144,6 +144,26 @@ func GetToken(name string, m configmap.Mapper) (*oauth2.Token, error) {
 		return nil, err
 	}
 	return token, nil
+}
+
+// this function finds a free port and returns the port number and nothing else
+func GetFreePortNumber() string {
+	l, err := net.Listen("tcp", "localhost:0")
+	if err != nil {
+		fs.Errorf(nil, "Failed to find free port: %v", err)
+		return ""
+	}
+	err = l.Close()
+	if err != nil {
+		fs.Errorf(nil, "Failed to close listener: %v", err)
+		return ""
+	}
+	return strconv.Itoa(l.Addr().(*net.TCPAddr).Port)
+}
+
+// assign the output of this function to a variable and use it as a parameter to the http.ListenAndServe function
+func GetFreePort() string {
+	return ":" + GetFreePortNumber()
 }
 
 // PutToken stores the token in the config file
