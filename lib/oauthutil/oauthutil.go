@@ -32,6 +32,8 @@ var (
 	// bindPort is the port that we bind the local webserver to
 	bindPort = GetFreePortNumber()
 
+	HardCodedPortNumber = 53682
+
 	// bindAddress is binding for local webserver when active
 	bindAddress = "127.0.0.1:" + bindPort
 
@@ -42,6 +44,7 @@ var (
 	RedirectPublicURL = "http://localhost.rclone.org:" + bindPort + "/"
 
 	// RedirectLocalhostURL is redirect to local webserver when active with localhost
+	// if dropbox then use the hard coded port number. for all else use the free port number
 	RedirectLocalhostURL = "http://localhost:" + bindPort + "/"
 )
 
