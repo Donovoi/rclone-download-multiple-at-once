@@ -131,10 +131,11 @@ Note that the chunks will be buffered into memory.`,
 			Default:  defaultChunkSize,
 			Advanced: true,
 		}, {
-			Name:     "drive_id",
-			Help:     "The ID of the drive to use.",
-			Default:  "",
-			Advanced: true,
+			Name:      "drive_id",
+			Help:      "The ID of the drive to use.",
+			Default:   "",
+			Advanced:  true,
+			Sensitive: true,
 		}, {
 			Name:     "drive_type",
 			Help:     "The type of the drive (" + driveTypePersonal + " | " + driveTypeBusiness + " | " + driveTypeSharepoint + ").",
@@ -148,7 +149,8 @@ This isn't normally needed, but in special circumstances you might
 know the folder ID that you wish to access but not be able to get
 there through a path traversal.
 `,
-			Advanced: true,
+			Advanced:  true,
+			Sensitive: true,
 		}, {
 			Name: "access_scopes",
 			Help: `Set scopes to be requested by rclone.
@@ -196,7 +198,9 @@ listing, set this option.`,
 		}, {
 			Name:    "server_side_across_configs",
 			Default: false,
-			Help: `Allow server-side operations (e.g. copy) to work across different onedrive configs.
+			Help: `Deprecated: use --server-side-across-configs instead.
+
+Allow server-side operations (e.g. copy) to work across different onedrive configs.
 
 This will only work if you are copying between two OneDrive *Personal* drives AND
 the files to copy are already shared between them.  In other cases, rclone will
@@ -258,7 +262,8 @@ this flag there.
 
 At the time of writing this only works with OneDrive personal paid accounts.
 `,
-			Advanced: true,
+			Advanced:  true,
+			Sensitive: true,
 		}, {
 			Name:    "hash_type",
 			Default: "auto",
